@@ -16,7 +16,6 @@ import { Badge } from "@/components/ui/badge";
 import { MenuItem } from "@/types/menuItems";
 import { usePathname } from "next/navigation";
 import { Separator } from "../ui/separator";
-import { ThemeToggle } from "../theme-toggle";
 
 export const menuItems: MenuItem[] = [
 	{
