@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 export default function LoginForm() {
 	const router = useRouter();
 	return (
-		<div className="w-full h-screen flex items-center justify-center bg-slate-300">
+		<div className="w-full h-screen flex items-center justify-center">
 			<Card className="w-full max-w-sm">
 				<CardHeader>
 					<CardTitle className="text-2xl">Login</CardTitle>
