@@ -1,4 +1,4 @@
-import Header from "@/components/header";
+import Header from "@/components/navigation/header";
 import Sidebar from "@/components/navigation/sidebar";
 
 export default function RootLayout({

@@ -111,7 +111,7 @@ export function OnBoardingForm() {
 					)}
 				/>
 				{/* Submit Button */}
-				<Button type="submit">Submit</Button>
+				<Button type="submit">Create Admin</Button>
 			</form>
 		</Form>
 	);

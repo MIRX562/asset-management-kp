@@ -18,12 +18,12 @@ export function ThemeToggle() {
 		<Button variant="outline" size="icon" onClick={toggleTheme}>
 			<Sun
 				className={`h-[1.2rem] w-[1.2rem] transition-all ${
-					theme === "dark" ? "rotate-0 scale-0" : "rotate-90 scale-100"
+					theme === "dark" ? "hidden" : ""
 				}`}
 			/>
 			<Moon
 				className={`h-[1.2rem] w-[1.2rem] transition-all ${
-					theme === "dark" ? "rotate-90 scale-100" : "rotate-0 scale-0"
+					theme === "dark" ? "" : "hidden"
 				}`}
 			/>
 			<span className="sr-only">Toggle theme</span>

@@ -1,19 +1,42 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation"; // useRouter for client-side navigation
 import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
+import { LoginForm } from "./form";
 
-export default function LoginForm() {
+export default function LoginPage() {
 	const router = useRouter();
+
+	useEffect(() => {
+		const checkUserExists = async () => {
+			try {
+				const response = await fetch("/api/users/check");
+				if (!response.ok) {
+					throw new Error("Failed to fetch user status");
+				}
+				const data = await response.json();
+				console.log("API response:", data); // Log the response data for debugging
+
+				// If no users exist, redirect to onboarding page
+				if (!data.exists) {
+					console.log("Redirecting to onboarding"); // Log redirection action
+					router.replace("/login/onboarding");
+				}
+			} catch (error) {
+				console.error("Failed to check user existence:", error);
+			}
+		};
+
+		checkUserExists();
+	}, [router]);
+
+	// Render the login page if users exist
 	return (
 		<div className="w-full h-screen flex items-center justify-center">
 			<Card className="w-full max-w-sm">
@@ -24,30 +47,8 @@ export default function LoginForm() {
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="grid gap-4">
-					<div className="grid gap-2">
-						<Label htmlFor="email">Email</Label>
-						<Input
-							id="email"
-							type="email"
-							placeholder="m@example.com"
-							required
-						/>
-					</div>
-					<div className="grid gap-2">
-						<Label htmlFor="password">Password</Label>
-						<Input id="password" type="password" required />
-					</div>
+					<LoginForm />
 				</CardContent>
-				<CardFooter>
-					<Button
-						className="w-full"
-						onClick={() => {
-							router.push("/");
-						}}
-					>
-						Sign in
-					</Button>
-				</CardFooter>
 			</Card>
 		</div>
 	);
