@@ -32,12 +32,12 @@ export const menuItems: MenuItem[] = [
 	{
 		label: "Check-in",
 		icon: ClipboardList,
-		href: "/assets",
+		href: "/assets/check-in",
 	},
 	{
 		label: "Check-out",
 		icon: ClipboardList,
-		href: "/assets",
+		href: "/assets/check-out",
 	},
 	{
 		label: "Maintenance",
@@ -69,7 +69,6 @@ export const menuItems: MenuItem[] = [
 
 const Sidebar = () => {
 	const currentPath = usePathname(); // Get the current pathname
-
 	return (
 		<div className="flex h-full max-h-screen flex-col gap-2">
 			<div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
@@ -106,7 +105,7 @@ const Sidebar = () => {
 				<Link
 					href="/notifications"
 					className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-						currentPath === "/notification"
+						currentPath === "/notifications"
 							? "bg-muted text-primary"
 							: "text-muted-foreground hover:text-primary"
 					}`}

@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react"; // Import useEffect and useState
 import SidebarMobile from "./sidebar-mobile";
-import { NotificationPanelPop } from "../notification-panel";
 import { usePathname } from "next/navigation";
 import { UserNav } from "./user-nav";
 import { ThemeToggle } from "../theme-toggle";
+import NotificationTray from "../notification-tray";
 
 const routeTitles: Record<string, string> = {
 	"/": "Dashboard",
@@ -12,7 +12,7 @@ const routeTitles: Record<string, string> = {
 	"/maintenance": "Maintenance Management",
 	"/inventory": "Inventory Management",
 	"/reports": "Reports",
-	"/users": "Admin/User Management",
+	"/users": "User Management",
 	"/settings": "Settings",
 	"/notifications": "Notifications",
 	// Add more routes and titles as needed
@@ -32,12 +32,12 @@ const Header = () => {
 	return (
 		<header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
 			<SidebarMobile />
-			<ThemeToggle />
 			<div className="w-full flex-1">
 				<h1 className="font-bold text-2xl">{pageTitle}</h1>{" "}
 			</div>
 			<UserNav />
-			<NotificationPanelPop />
+			<ThemeToggle />
+			<NotificationTray />
 		</header>
 	);
 };
