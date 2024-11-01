@@ -1,4 +1,5 @@
 // types/menuItem.ts
+import { Role } from "@prisma/client";
 import { LucideIcon } from "lucide-react";
 
 export interface MenuItem {
@@ -7,4 +8,5 @@ export interface MenuItem {
 	icon: LucideIcon;
 	description?: string;
 	badge?: number;
+	role: Role[];
 }

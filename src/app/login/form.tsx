@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { signIn } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 // !Step 1: Create a Zod schema for the form
 const formSchema = z.object({
@@ -28,6 +29,7 @@ const formSchema = z.object({
 // Step 2: Boilerplate Form Component
 export function LoginForm() {
 	const router = useRouter();
+
 	// !Step 3: Initialize react-hook-form with Zod validation
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -39,20 +41,16 @@ export function LoginForm() {
 
 	// !Step 4: Define the submit handler
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		const { error } = await signIn.email(
-			{
-				email: values.email,
-				password: values.password,
-			},
-			{
-				onError: (ctx) => {
-					alert(ctx.error.message);
-				},
-			}
-		);
+		const { error } = await signIn.email({
+			email: values.email,
+			password: values.password,
+		});
+
+		if (error) {
+			toast.error(error.message);
+		}
 
 		if (!error) {
-			// console.log(data);
 			router.push("/");
 		}
 	};

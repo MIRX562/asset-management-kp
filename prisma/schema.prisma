@@ -1,121 +1,133 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 model User {
-  id                String        @id @default(cuid())
-  email             String        @unique
-  name              String?
-  imageId           String?       // Reference to Media
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  id                  String              @id @default(cuid())
+  email               String              @unique
+  emailVerified       Boolean
+  name                String
+  role                Role                @default(EMPLOYEE)
+  imageId             String? // Reference to Media
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  image               Media?              @relation(fields: [imageId], references: [id])
+  Session             Session[]
+  Account             Account[]
+  notifications       Notification[]
+  recentActivities    RecentActivity[]
+  assetCategories     AssetCategory[] // User's custom asset categories
+  inventoryCategories InventoryCategory[] // User's custom inventory categories
+  CheckOut            CheckOut[]
 
   @@map("user")
-  image             Media?        @relation(fields: [imageId], references: [id])
-  Session            Session[]   
-  Account            Account[]   
-  notifications      Notification[]
-  recentActivities   RecentActivity[]
-  assetCategories    AssetCategory[]     // User's custom asset categories
-  inventoryCategories InventoryCategory[]  // User's custom inventory categories
-  CheckOut CheckOut[]
 }
 
 model AssetCategory {
-  id          String   @id @default(cuid())
-  name        String   // e.g., "Electronics", "Furniture"
-  description String?  // Optional description of the category
-  userId      String   // Reference to User
-  user        User     @relation(fields: [userId], references: [id])
+  id          String  @id @default(cuid())
+  name        String // e.g., "Electronics", "Furniture"
+  description String? // Optional description of the category
+  userId      String // Reference to User
+  user        User    @relation(fields: [userId], references: [id])
 
-  assets      Asset[]  // Relation to Asset model
+  assets Asset[] // Relation to Asset model
 }
 
 model InventoryCategory {
-  id          String   @id @default(cuid())
-  name        String   // e.g., "Office Supplies", "Hardware"
-  description String?  // Optional description of the category
-  userId      String   // Reference to User
-  user        User     @relation(fields: [userId], references: [id])
+  id          String  @id @default(cuid())
+  name        String // e.g., "Office Supplies", "Hardware"
+  description String? // Optional description of the category
+  userId      String // Reference to User
+  user        User    @relation(fields: [userId], references: [id])
 
-  items       InventoryItem[]  // Relation to InventoryItem model
+  items InventoryItem[] // Relation to InventoryItem model
 }
 
 model AssetType {
-  id          String   @id @default(cuid())
-  name        String   // e.g., "MacBook Pro 16"
-  description String?  // Optional description of the asset type
-  imageId     String?  // Reference to Media
-  image       Media?   @relation(fields: [imageId], references: [id])
-  
-  assets      Asset[]  // Relation to Asset model
+  id          String  @id @default(cuid())
+  name        String // e.g., "MacBook Pro 16"
+  description String? // Optional description of the asset type
+  imageId     String? // Reference to Media
+  image       Media?  @relation(fields: [imageId], references: [id])
+
+  assets Asset[] // Relation to Asset model
 }
 
 model Asset {
-  id            String      @id @default(cuid())
-  serialNumber  String      @unique
-  categoryId    String      // Reference to AssetCategory
-  typeId        String      // Reference to AssetType
-  purchaseDate  DateTime
-  status        AssetStatus
-  type          AssetType   @relation(fields: [typeId], references: [id])
-  category      AssetCategory @relation(fields: [categoryId], references: [id])
+  id           String        @id @default(cuid())
+  serialNumber String        @unique
+  categoryId   String // Reference to AssetCategory
+  typeId       String // Reference to AssetType
+  purchaseDate DateTime
+  status       AssetStatus
+  type         AssetType     @relation(fields: [typeId], references: [id])
+  category     AssetCategory @relation(fields: [categoryId], references: [id])
 
   // Relationships
-  checkOuts     CheckOut[]  
-  maintenance   Maintenance[]
-  notifications Notification[]
+  checkOuts        CheckOut[]
+  maintenance      Maintenance[]
+  notifications    Notification[]
   recentActivities RecentActivity[]
 }
 
 model InventoryItem {
-  id                String      @id @default(cuid())
+  id                String  @id @default(cuid())
   name              String
-  categoryId        String      // Reference to InventoryCategory
+  categoryId        String // Reference to InventoryCategory
   quantity          Int
   lowStockThreshold Int
-  imageId           String?     // Reference to Media
-  image             Media?      @relation(fields: [imageId], references: [id])
-  
+  imageId           String? // Reference to Media
+  image             Media?  @relation(fields: [imageId], references: [id])
+
   // Relationships
-  logs              InventoryLog[]
-  notifications     Notification[]
-  recentActivities  RecentActivity[]
-  category          InventoryCategory @relation(fields: [categoryId], references: [id])
+  logs             InventoryLog[]
+  notifications    Notification[]
+  recentActivities RecentActivity[]
+  category         InventoryCategory @relation(fields: [categoryId], references: [id])
 }
 
 model Maintenance {
-  id               String      @id @default(cuid())
+  id               String           @id @default(cuid())
   assetId          String
   performedBy      String
   description      String
   maintenanceDate  DateTime
   nextMaintenance  DateTime?
   cost             Float
-  asset            Asset       @relation(fields: [assetId], references: [id])
+  asset            Asset            @relation(fields: [assetId], references: [id])
   recentActivities RecentActivity[]
 }
 
 model CheckOut {
-  id               String      @id @default(cuid())
+  id               String           @id @default(cuid())
   userId           String
   assetId          String
   checkOutDate     DateTime
   checkInDate      DateTime?
   dueDate          DateTime
   status           CheckOutStatus
-  user             User        @relation(fields: [userId], references: [id])
-  asset            Asset       @relation(fields: [assetId], references: [id])
+  user             User             @relation(fields: [userId], references: [id])
+  asset            Asset            @relation(fields: [assetId], references: [id])
   recentActivities RecentActivity[]
 }
 
 model RecentActivity {
-  id              String      @id @default(cuid())
-  userId          String      
-  assetId         String?     
-  inventoryId     String?     
-  actionType      ActionType
-  actionDate      DateTime    @default(now())
-  description     String
-  user            User        @relation(fields: [userId], references: [id])
-  asset           Asset?      @relation(fields: [assetId], references: [id])
-  inventoryItem   InventoryItem? @relation(fields: [inventoryId], references: [id])
+  id            String         @id @default(cuid())
+  userId        String
+  assetId       String?
+  inventoryId   String?
+  actionType    ActionType
+  actionDate    DateTime       @default(now())
+  description   String
+  user          User           @relation(fields: [userId], references: [id])
+  asset         Asset?         @relation(fields: [assetId], references: [id])
+  inventoryItem InventoryItem? @relation(fields: [inventoryId], references: [id])
 
   InventoryLog InventoryLog[]
 
@@ -125,36 +137,36 @@ model RecentActivity {
 }
 
 model InventoryLog {
-  id                String      @id @default(cuid())
-  inventoryItemId   String
-  action            InventoryAction
-  quantity          Int
-  description       String
-  date              DateTime    @default(now())
-  inventoryItem     InventoryItem @relation(fields: [inventoryItemId], references: [id])
-  recentActivities   RecentActivity[]
+  id               String           @id @default(cuid())
+  inventoryItemId  String
+  action           InventoryAction
+  quantity         Int
+  description      String
+  date             DateTime         @default(now())
+  inventoryItem    InventoryItem    @relation(fields: [inventoryItemId], references: [id])
+  recentActivities RecentActivity[]
 }
 
 model Notification {
-  id                String      @id @default(cuid())
-  userId            String     
-  assetId           String?
-  inventoryId       String?
-  message           String
-  type              NotificationType
-  read              Boolean
-  sentAt            DateTime    @default(now())
-  user              User        @relation(fields: [userId], references: [id])
-  asset             Asset?      @relation(fields: [assetId], references: [id])
-  inventoryItem     InventoryItem? @relation(fields: [inventoryId], references: [id])
+  id            String           @id @default(cuid())
+  userId        String
+  assetId       String?
+  inventoryId   String?
+  message       String
+  type          NotificationType
+  read          Boolean
+  sentAt        DateTime         @default(now())
+  user          User             @relation(fields: [userId], references: [id])
+  asset         Asset?           @relation(fields: [assetId], references: [id])
+  inventoryItem InventoryItem?   @relation(fields: [inventoryId], references: [id])
 }
 
 model Media {
-  id                String      @id @default(cuid())
-  url               String      // URL of the image
-  type              String      // e.g., 'image/png', 'image/jpeg'
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  id        String   @id @default(cuid())
+  url       String // URL of the image
+  type      String // e.g., 'image/png', 'image/jpeg'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   InventoryItem InventoryItem[]
 
@@ -210,7 +222,8 @@ model Session {
   ipAddress String?
   userAgent String?
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade) 
+
 
   @@map("session")
 }

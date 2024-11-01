@@ -7,6 +7,7 @@ const SignOutButton = () => {
 	const router = useRouter();
 	return (
 		<div
+			className="w-full"
 			onClick={() => {
 				signOut();
 				router.push("login");

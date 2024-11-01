@@ -16,6 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { signUp } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { setUserAsAdmin } from "@/actions/userAction";
 
 // !Step 1: Create a Zod schema for the form
 const formSchema = z.object({
@@ -45,21 +47,18 @@ export function OnBoardingForm() {
 
 	// !Step 4: Define the submit handler
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		const { error } = await signUp.email(
-			{
-				email: values.email,
-				password: values.password,
-				name: values.username,
-			},
-			{
-				onError: (ctx) => {
-					alert(ctx.error.message);
-				},
-			}
-		);
+		const { data, error } = await signUp.email({
+			email: values.email,
+			password: values.password,
+			name: values.username,
+		});
+
+		if (error) {
+			toast.error(error.message);
+		}
 
 		if (!error) {
-			// console.log(data);
+			await setUserAsAdmin(data.user.id);
 			router.push("/");
 		}
 	};

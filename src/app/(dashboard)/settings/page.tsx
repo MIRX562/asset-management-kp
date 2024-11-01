@@ -51,14 +51,15 @@ export default function SettingsPage() {
 	const [newPassword, setNewPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const handleNotificationChange = (key: string) => {
-		setSettings((prev) => ({
-			...prev,
-			notificationPreferences: {
-				...prev.notificationPreferences,
-				[key]: !prev.notificationPreferences[key],
-			},
-		}));
+		// setSettings((prev) => ({
+		// 	...prev,
+		// 	notificationPreferences: {
+		// 		...prev.notificationPreferences,
+		// 		[key]: !prev.notificationPreferences[key],
+		// 	},
+		// }));
 	};
 
 	const handleSaveSettings = () => {
