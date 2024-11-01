@@ -23,7 +23,7 @@ export default authMiddleware({
 		if (publicRoutes.some((route) => pathname.startsWith(route))) {
 			// If user is signed in and tries to access login, redirect to dashboard
 			if (session && pathname === "/login") {
-				return NextResponse.redirect(new URL("/dashboard", baseURL));
+				return NextResponse.redirect(new URL("/", baseURL));
 			}
 			return NextResponse.next(); // Allow access to public routes
 		}
