@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 export async function getSession() {
 	try {
 		const session = await auth.api.getSession({
-			headers: headers(), // pass the headers object.
+			headers: await headers(), // pass the headers object.
 		});
 		return session; // always return something, fallback to empty object if session is null/undefined
 	} catch (error) {
